@@ -41,16 +41,19 @@
   "Ignore body eval to nil."
   nil)
 
+;;;###autoload
 (defun babashka--buffer-dir ()
   "Return directory of the current buffer."
   (if-let ((file-name (buffer-file-name)))
       (file-name-directory file-name)))
 
+;;;###autoload
 (defun babashka--run-shell-command-in-directory (directory command &optional output-buffer)
   "Run a shell COMMAND in a DIRECTORY and display output in OUTPUT-BUFFER."
   (let ((default-directory directory))
     (async-shell-command command output-buffer)))
 
+;;;###autoload
 (defun babashka--find-bb-edn-upwards (dir)
   "Recursively search upwards from DIR for bb.edn file."
   (let ((bb-file (concat (file-truename dir) "/bb.edn")))
@@ -60,10 +63,12 @@
           (babashka--find-bb-edn-upwards (expand-file-name "../" dir))
         nil))))
 
+;;;###autoload
 (defun babashka--finb-bb-edn-upwards-from-buffer ()
   "Recursively search upwards from current buffer directory."
   (babashka--find-bb-edn-upwards (babashka--buffer-dir)))
 
+;;;###autoload
 (defun babashka--get-tasks-hash-table (file-path)
   "List babashka tasks as hash table from edn file unde FILE-PATH."
   (thread-last
@@ -71,10 +76,7 @@
     babashka--read-edn-file
     (gethash :tasks)))
 
-;; (defun babashka--get-tasks-hash-table-from-buffer ()
-;;   "Find bb.edn recursively upward from buffer path and return tasks hash-table."
-;;   (babashka--get-tasks-hash-table (file-name-directory (buffer-file-name))))
-
+;;;###autoload
 (defun babashka--run-task (dir)
   "Select a task to run from bb.edn in DIR or it's parents."
   (if-let*
@@ -98,11 +100,16 @@
 
 Find bb.edn in current DIR or it's parents, and show a menu to select and run a task. When called with C-u prompts for directory."
   (interactive "P")
+  (babashka--load-library)
   (let* ((dir (if arg (read-file-name "Enter a path to bb.edn: ")
                 (babashka--buffer-dir))))
     (if dir
         (babashka--run-task dir)
       (message "Not in a file buffer. Run babashka-tasks when visiting one of your project's files."))))
+
+
+
+
 
 (provide 'babashka)
 ;;; babashka.el ends here
