@@ -42,7 +42,7 @@
   nil)
 
 (defun babashka--read-edn-file (file-path)
-  "Read edn file under FiLE-PATH and return as hash-table."
+  "Read edn file under FILE-PATH and return as hash-table."
   (parseedn-read-str
    (with-temp-buffer
      (insert-file-contents file-path)
