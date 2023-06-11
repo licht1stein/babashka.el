@@ -5,11 +5,11 @@
 ;; Author: Mikhail Beliansky <mb@blaster.ai>
 ;; Maintainer: Mikhail Beliansky <mb@blaster.ai>
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "27.1") (s "1.12.0") (dash "2.13"))
 ;;
 ;; Created: 11 Jun 2023
 ;;
-;; URL: https://github.com/licht1stein
+;; URL: https://github.com/licht1stein/babashka.el
 ;;
 ;; License: GPLv3
 ;;
