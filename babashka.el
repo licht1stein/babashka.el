@@ -100,7 +100,6 @@
 
 Find bb.edn in current DIR or it's parents, and show a menu to select and run a task. When called with C-u prompts for directory."
   (interactive "P")
-  (babashka--load-library)
   (let* ((dir (if arg (read-file-name "Enter a path to bb.edn: ")
                 (babashka--buffer-dir))))
     (if dir
