@@ -4,7 +4,7 @@
 ;;
 ;; Author: Mikhail Beliansky <mb@blaster.ai>
 ;; Maintainer: Mikhail Beliansky <mb@blaster.ai>
-;; Version: 1.0.0
+;; Version: 1.0.1
 ;; Package-Requires: ((emacs "27.1") (parseedn "1.1.0"))
 ;;
 ;; Created: 11 Jun 2023
