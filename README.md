@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/babashka/babashka/master/logo/babashka.svg" widht="200px" height="200px">
 
 # babashka.el
-Emacs interface for babashka tasks.
+Emacs interface for [babashka](https://babashka.org) tasks.
 
 ## Usage
 
@@ -27,8 +27,14 @@ You can install the library using use-package and straight:
 (use-package babashka
   :straight (:type git :host github :repo "licht1stein/babashka.el"))
 ```
-
 I will submit the library to MELPA once I test it a little.
+
+## Versioning
+The project uses [break versioning](https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md), meaning that upgrading from 1.0.x to 1.0.y will always be safe, upgrade to 1.y.0 might break something small, and upgrade to y.0.0. will break almost everything. That was a versioning spec in one sentence, by the way.
+
+## Contributing
+If you have more ideas about using babashka from Emacs — please submit a PR or a feature request.
+
 
 
 
