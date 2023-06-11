@@ -43,7 +43,8 @@
 
 (defun babashka--buffer-dir ()
   "Return directory of the current buffer."
-  (file-name-directory (buffer-file-name)))
+  (if-let ((file-name (buffer-file-name)))
+      (file-name-directory file-name)))
 
 (defun babashka--run-shell-command-in-directory (directory command &optional output-buffer)
   "Run a shell COMMAND in a DIRECTORY and display output in OUTPUT-BUFFER."
@@ -76,26 +77,31 @@
 
 (defun babashka--run-task (dir)
   "Select a task to run from bb.edn in DIR or it's parents."
-  (if-let ((bb-edn (babashka--find-bb-edn-upwards dir))
-           (bb-edn-dir (file-name-directory bb-edn))
-           (tasks (babashka--get-tasks-hash-table bb-edn))
-           (task-names (thread-last tasks hash-table-keys (mapcar 'symbol-name)))
-           (sorted-task-names (sort task-names 'string<)))
-      (if tasks
-          (thread-last
-            sorted-task-names
-            (completing-read "Run tasks: ")
-            (format "bb %s")
-            (babashka--run-shell-command-in-directory bb-edn-dir))
-        (message (format "No tasks found in %s" bb-edn)))
+  (if-let*
+      ((bb-edn (babashka--find-bb-edn-upwards dir)))
+      (let* ((bb-edn-dir (file-name-directory bb-edn))
+             (tasks (babashka--get-tasks-hash-table bb-edn))
+             (task-names (thread-last tasks hash-table-keys (mapcar 'symbol-name)))
+             (sorted-task-names (sort task-names 'string<)))
+        (if tasks
+            (thread-last
+              sorted-task-names
+              (completing-read "Run tasks: ")
+              (format "bb %s")
+              (babashka--run-shell-command-in-directory bb-edn-dir))
+          (message (format "No tasks found in %s" bb-edn))))
     (message "No bb.edn found")))
 
-(defun babashka-tasks (dir)
-  "Run babashka tasks for project.
+(defun babashka-tasks (arg)
+  "Run babashka tasks for project or any path.
 
-Find bb.edn in current DIR or it's parents, and show a menu to select and run a task. When run interactively uses current buffer's directory as DIR."
-  (interactive (list (babashka--buffer-dir)))
-  (babashka--run-task dir))
+Find bb.edn in current DIR or it's parents, and show a menu to select and run a task. When called with C-u prompts for directory."
+  (interactive "P")
+  (let* ((dir (if arg (read-file-name "Enter a path to bb.edn: ")
+                  (babashka--buffer-dir))))
+    (if dir
+        (babashka--run-task dir)
+      (message "Not in a file buffer. Run babashka-tasks when visiting one of your project's files."))))
 
 (provide 'babashka)
 ;;; babashka.el ends here
