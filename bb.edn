@@ -1,12 +1,10 @@
 {:paths ["bb"]
  :tasks
  {hello
-  {:doc "Print hello world"
-   :task (println "Hello, world!")}
-
-  y (println "This one too")
-
-  z (println "I need this one to test sorting")
+  {:doc "Print hello world or name"
+   :task (if *command-line-args*
+           (apply println "Hello," *command-line-args*)
+           (println "Hello, world!"))}
 
   bye
   {:doc "Goodbye world!"

@@ -92,13 +92,14 @@
           (message (format "No tasks found in %s" bb-edn))))
     (message "No bb.edn found")))
 
+;;;###autoload
 (defun babashka-tasks (arg)
   "Run babashka tasks for project or any path.
 
 Find bb.edn in current DIR or it's parents, and show a menu to select and run a task. When called with C-u prompts for directory."
   (interactive "P")
   (let* ((dir (if arg (read-file-name "Enter a path to bb.edn: ")
-                  (babashka--buffer-dir))))
+                (babashka--buffer-dir))))
     (if dir
         (babashka--run-task dir)
       (message "Not in a file buffer. Run babashka-tasks when visiting one of your project's files."))))
