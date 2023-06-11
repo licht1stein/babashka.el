@@ -8,7 +8,7 @@ Emacs interface for babashka tasks.
 ### Simply call a task
 Library provides one entry point `babashka-tasks`. If called from a buffer visiting a file in a project with `bb.edn` in it, it will look up the directory tree recursively until `bb.edn` is found, parses it for tasks and offer a menu to select a task to run:
 
-![](./videos/1-simle.gif)
+![](./videos/1-simple.gif)
 
 ### Call a tasks with command line args
 If your task accepts command line arguments, just type them after the task name:
