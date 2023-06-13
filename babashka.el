@@ -72,8 +72,8 @@
       ((bb-edn (babashka--locate-bb-edn dir)))
       (let* ((bb-edn-dir (file-name-directory bb-edn))
              (tasks (babashka--get-tasks-hash-table bb-edn))
-             (task-names (thread-last tasks hash-table-keys (mapcar 'symbol-name)))
-             (sorted-task-names (sort task-names 'string<)))
+             (task-names (thread-last tasks hash-table-keys (mapcar #'symbol-name)))
+             (sorted-task-names (sort task-names #'string<)))
         (if tasks
             (thread-last
               sorted-task-names
