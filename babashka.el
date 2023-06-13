@@ -4,7 +4,7 @@
 ;;
 ;; Author: Mikhail Beliansky <mb@blaster.ai>
 ;; Maintainer: Mikhail Beliansky <mb@blaster.ai>
-;; Version: 1.0.1
+;; Version: 1.0.2
 ;; Package-Requires: ((emacs "27.1") (parseedn "1.1.0"))
 ;;
 ;; Created: 11 Jun 2023
@@ -30,9 +30,10 @@
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
-;; Provide a simple minibuffer completion interface to running babashka tasks for
-;; a project. Looks for bb.edn in the current directory or any of it's parents, and if
-;; found and file contains :tasks provides user with menu to choose a task to run.
+;; Provide a simple minibuffer completion interface to running babashka tasks
+;; for a project. Looks for bb.edn in the current directory or any of it's
+;; parents, and if found and file contains :tasks provides user with menu to
+;; choose a task to run.
 ;;
 ;;; Code:
 (require 'parseedn)
@@ -48,28 +49,15 @@
      (insert-file-contents file-path)
      (buffer-string))))
 
-(defun babashka--buffer-dir ()
-  "Return directory of the current buffer."
-  (if-let ((file-name (buffer-file-name)))
-      (file-name-directory file-name)))
-
 (defun babashka--run-shell-command-in-directory (directory command &optional output-buffer)
   "Run a shell COMMAND in a DIRECTORY and display output in OUTPUT-BUFFER."
   (let ((default-directory directory))
     (async-shell-command command output-buffer)))
 
-(defun babashka--find-bb-edn-upwards (dir)
+(defun babashka--locate-bb-edn (&optional dir)
   "Recursively search upwards from DIR for bb.edn file."
-  (let ((bb-file (concat (file-truename dir) "/bb.edn")))
-    (if (file-exists-p bb-file)
-        (expand-file-name bb-file)
-      (if (not (equal dir "/"))
-          (babashka--find-bb-edn-upwards (expand-file-name "../" dir))
-        nil))))
-
-(defun babashka--finb-bb-edn-upwards-from-buffer ()
-  "Recursively search upwards from current buffer directory."
-  (babashka--find-bb-edn-upwards (babashka--buffer-dir)))
+  (if-let ((found (locate-dominating-file (or dir default-directory) "bb.edn")))
+      (concat found "bb.edn")))
 
 (defun babashka--get-tasks-hash-table (file-path)
   "List babashka tasks as hash table from edn file unde FILE-PATH."
@@ -81,7 +69,7 @@
 (defun babashka--run-task (dir)
   "Select a task to run from bb.edn in DIR or it's parents."
   (if-let*
-      ((bb-edn (babashka--find-bb-edn-upwards dir)))
+      ((bb-edn (babashka--locate-bb-edn dir)))
       (let* ((bb-edn-dir (file-name-directory bb-edn))
              (tasks (babashka--get-tasks-hash-table bb-edn))
              (task-names (thread-last tasks hash-table-keys (mapcar 'symbol-name)))
@@ -93,16 +81,16 @@
               (format "bb %s")
               (babashka--run-shell-command-in-directory bb-edn-dir))
           (message (format "No tasks found in %s" bb-edn))))
-    (message "No bb.edn found")))
+    (message "No bb.edn found in directory or any of the parents.")))
 
 ;;;###autoload
 (defun babashka-tasks (arg)
   "Run babashka tasks for project or any path.
 
-Find bb.edn in current DIR or it's parents, and show a menu to select and run a task. When called with C-u prompts for directory."
+Find bb.edn in current dir or it's parents, and show a menu to select
+and run a task. When called with interactive ARG prompts for directory."
   (interactive "P")
-  (let* ((dir (if arg (read-file-name "Enter a path to bb.edn: ")
-                (babashka--buffer-dir))))
+  (let* ((dir (if arg (read-file-name "Enter a path to bb.edn: ") default-directory)))
     (if dir
         (babashka--run-task dir)
       (message "Not in a file buffer. Run babashka-tasks when visiting one of your project's files."))))
