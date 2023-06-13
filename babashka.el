@@ -1,9 +1,9 @@
 ;;; babashka.el --- Babashka Tasks Interface -*- lexical-binding: t; -*-
 ;;
-;; Copyright (c) 2023, Mikhail Beliansky <mb@blaster.ai>
+;; Copyright (c) 2023, Mykhaylo Bilyanskyy <mb@m1k.pw>
 ;;
-;; Author: Mikhail Beliansky <mb@blaster.ai>
-;; Maintainer: Mikhail Beliansky <mb@blaster.ai>
+;; Author: Mykhaylo Bilyanskyy <mb@m1k.pw>
+;; Maintainer: Mykhaylo Bilyanskyy <mb@m1k.pw>
 ;; Version: 1.0.2
 ;; Package-Requires: ((emacs "27.1") (parseedn "1.1.0"))
 ;;
