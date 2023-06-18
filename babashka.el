@@ -66,6 +66,10 @@
     babashka--read-edn-file
     (gethash :tasks)))
 
+(defun babashka--escape-args (s)
+  "Shell quote parts of the string S that require it."
+  (mapconcat #'shell-quote-argument (split-string s) " "))
+
 (defun babashka--run-task (dir)
   "Select a task to run from bb.edn in DIR or it's parents."
   (if-let*
@@ -78,9 +82,10 @@
             (thread-last
               sorted-task-names
               (completing-read "Run tasks: ")
+              babashka--escape-args
               (format "bb %s")
               (babashka--run-shell-command-in-directory bb-edn-dir))
-          (message (format "No tasks found in %s" bb-edn))))
+          (message "No tasks found in %s" bb-edn)))
     (message "No bb.edn found in directory or any of the parents.")))
 
 ;;;###autoload
