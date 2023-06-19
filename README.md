@@ -3,6 +3,9 @@
 # babashka.el
 Emacs interface for [babashka](https://babashka.org) tasks.
 
+[![MELPA](https://melpa.org/packages/babashka-badge.svg)](https://melpa.org/#/babashka)
+[![MELPA Stable](https://stable.melpa.org/packages/babashka-badge.svg)](https://stable.melpa.org/#/babashka)
+
 ## Usage
 
 ### Simply call a task
@@ -21,13 +24,17 @@ If you want to specify a `bb.edn` to run tasks from, simply call `babashka-tasks
 ![](./videos/2-interactive.gif)
 
 ## Installation
-You can install the library using use-package and straight:
+Babashka.el is available on [MELPA](https://melpa.org/#/babashka) and [MELPA Stable](https://stable.melpa.org/#/babashka) and can be installed with:
+
+```
+M-x package-install RET babashka RET
+```
+
+or using `use-package`:
 
 ```elisp
-(use-package babashka
-  :straight (:type git :host github :repo "licht1stein/babashka.el"))
+(use-package babashka)
 ```
-I will submit the library to MELPA once I test it a little.
 
 ## Versioning
 The project uses [break versioning](https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md), meaning that upgrading from 1.0.x to 1.0.y will always be safe, upgrade to 1.y.0 might break something small, and upgrade to y.0.0. will break almost everything. That was a versioning spec in one sentence, by the way.
