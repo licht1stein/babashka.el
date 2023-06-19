@@ -19,7 +19,11 @@ If your task accepts command line arguments, just type them after the task name:
 ![](./videos/3-args.gif)
 
 ### Call tasks from any directory
-If you want to specify a `bb.edn` to run tasks from, simply call `babashka-tasks` with an interactive argument: `C-u M-x babashka-tasks RET`:
+If you want to specify a `bb.edn` to run tasks from, simply call `babashka-tasks` with an interactive argument:
+
+```
+C-u M-x babashka-tasks RET
+```
 
 ![](./videos/2-interactive.gif)
 
