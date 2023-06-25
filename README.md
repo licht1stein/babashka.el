@@ -9,7 +9,7 @@ Emacs interface for [babashka](https://babashka.org) tasks.
 ## Usage
 
 ### Simply call a task
-Library provides one entry point `babashka-tasks`. If called from a buffer visiting a file in a project with `bb.edn` in it, it will look up the directory tree recursively until `bb.edn` is found, parses it for tasks and offer a menu to select a task to run:
+The main entry point is `babashka-tasks`. If called from a buffer visiting a file in a project with `bb.edn` in it, it will look up the directory tree recursively until `bb.edn` is found, parses it for tasks and offer a menu to select a task to run:
 
 ![](./videos/1-simple.gif)
 
@@ -26,6 +26,24 @@ C-u M-x babashka-tasks RET
 ```
 
 ![](./videos/2-interactive.gif)
+
+### Make it a `project-switch-project` action
+`project-switch-project` can be extended with custom dispatch
+actions. To add a dispatch action which runs a Babashka task from the
+project's root, add `babashka-project-tasks` to your
+`project-switch-commands` list. For example:
+```elisp
+(setq project-switch-commands
+      '((babashka-project-tasks "Babashka task" "t") ;; <--
+        (magit-project-status "Magit status" "m")
+        (project-find-file "Find file")
+        (project-find-regexp "Find regexp")
+        (project-find-dir "Find directory")
+        (project-eshell "Eshell")
+        ))
+```
+
+![](./videos/4-project.gif)
 
 ## Installation
 Babashka.el is available on [MELPA](https://melpa.org/#/babashka) and [MELPA Stable](https://stable.melpa.org/#/babashka) and can be installed with:
