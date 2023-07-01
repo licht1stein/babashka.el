@@ -31,7 +31,7 @@
 ;;
 ;;; Commentary:
 ;; Provide a simple minibuffer completion interface to running Babashka tasks
-;; for a project. Looks for bb.edn in the current directory or any of its
+;; for a project.  Looks for bb.edn in the current directory or any of its
 ;; parents, and if found and file contains :tasks provides user with menu to
 ;; choose a task to run.
 ;;
@@ -72,14 +72,15 @@
   (mapconcat #'shell-quote-argument (split-string s) " "))
 
 (defun babashka--run-task (dir &optional do-not-recurse)
-  "Select a task to run from bb.edn in DIR or its parents. If
-DO-NOT-RECURSE is passed and is not nil, don't search for bb.edn in
+  "Select a task to run from bb.edn in DIR or its parents.
+
+If DO-NOT-RECURSE is passed and is not nil, don't search for bb.edn in
 DIR's parents."
   (if-let*
       ((bb-edn (if do-not-recurse
-		   (let ((f (concat dir "/bb.edn"))) (and (file-exists-p f) f))
-		   (babashka--locate-bb-edn dir)
-		 )))
+		               (let ((f (concat dir "/bb.edn"))) (and (file-exists-p f) f))
+		             (babashka--locate-bb-edn dir)
+		             )))
       (let* ((bb-edn-dir (file-name-directory bb-edn))
              (tasks (babashka--get-tasks-hash-table bb-edn))
              (task-names (thread-last tasks hash-table-keys (mapcar #'symbol-name)))
@@ -93,33 +94,36 @@ DIR's parents."
               (babashka--run-shell-command-in-directory bb-edn-dir))
           (message "No tasks found in %s" bb-edn)))
     (message (if do-not-recurse
-		 "No bb.edn found in directory."
-		 "No bb.edn found in directory or any of the parents."))))
+		             "No bb.edn found in directory."
+		           "No bb.edn found in directory or any of the parents."))))
 
 ;;;###autoload
 (defun babashka-tasks (arg)
   "Run Babashka tasks for project or any path.
 
-Find bb.edn in current dir or its parents, and show a menu to select
-and run a task. When called with interactive ARG prompts for directory."
+
+Find bb.edn in current dir or its parents, and show a menu to select and run
+a task.
+
+When called with interactive ARG prompts for directory."
   (interactive "P")
   (let* ((dir (if arg
-		  (read-file-name "Enter a path to bb.edn: ")
-		default-directory)))
+		              (read-file-name "Enter a path to bb.edn: ")
+		            default-directory)))
     (if dir
         (babashka--run-task dir)
       (message "Not in a file buffer. Run babashka-tasks when visiting one of your project's files."))))
 
 ;;;###autoload
 (defun babashka-project-tasks ()
-  "Run a Babashka task from the bb.edn file in the project's root
-directory.
+  "Run a Babashka task from the bb.edn file in the project's root directory.
 
-This command is intended to be used as a `project-switch-project'
-command by adding it to `project-switch-commands'. For example by
-evaling:
+This command is intended to be used as a `project-switch-project' command
+by adding it to `project-switch-commands'.
 
-(add-to-list \\='project-switch-commands
+For example by evaling:
+
+\(add-to-list \\='project-switch-commands
   \\='(babashka-project-tasks \"Babashka task\" \"t\"))"
   (interactive)
   (thread-first
