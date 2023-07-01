@@ -37,6 +37,7 @@
 ;;
 ;;; Code:
 (require 'parseedn)
+(require 'project)
 
 (defmacro babashka--comment (&rest _)
   "Ignore body eval to nil."
