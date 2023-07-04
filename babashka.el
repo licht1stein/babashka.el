@@ -79,8 +79,7 @@ DIR's parents."
   (if-let*
       ((bb-edn (if do-not-recurse
 		               (let ((f (concat dir "/bb.edn"))) (and (file-exists-p f) f))
-		             (babashka--locate-bb-edn dir)
-		             )))
+		             (babashka--locate-bb-edn dir))))
       (let* ((bb-edn-dir (file-name-directory bb-edn))
              (tasks (babashka--get-tasks-hash-table bb-edn))
              (task-names (thread-last tasks hash-table-keys (mapcar #'symbol-name)))
