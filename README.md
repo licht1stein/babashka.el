@@ -46,10 +46,11 @@ project's root, add `babashka-project-tasks` to your
 ![](./videos/4-project.gif)
 
 ## Customization
-
-`babashka-command` - The command used to execute Babashka, if [CIDER](https://cider.mx/) is loaded, gets its default value from `cider-babashka-command`.
+`babashka-command` - The command used to execute Babashka, if [CIDER](https://cider.mx/) is loaded, gets its default value from `cider-babashka-command`, so you don't need to customize both.
 
 `babashka-async-shell-command` - a single-arity Emacs lisp function to call `babashka-command`. The default value is `async-shell-command`, another possible option is `detached-shell-command` from [detached.el](https://sr.ht/~niklaseklund/detached.el/) package.
+
+`babashka-annotation-function` - a function to convert `tasks` hashtable to  (task . documentation) alist. The only available option now is `babashka--annotation-function`.
 
 ## Installation
 Babashka.el is available on [MELPA](https://melpa.org/#/babashka) and [MELPA Stable](https://stable.melpa.org/#/babashka) and can be installed with:

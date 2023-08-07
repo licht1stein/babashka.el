@@ -44,15 +44,11 @@
   "Babashka Tasks Interface"
   :group 'external)
 
-(defcustom babashka-tasks-from-bb nil
-  "Get task list by calling Babashka instead of bb.edn parsing."
-  :group 'babashka
-  :type 'boolean)
-
 (defcustom babashka-async-shell-command #'async-shell-command
   "Emacs function to run shell commands."
   :group 'babashka
-  :type 'function)
+  :type 'function
+  :safe #'functionp)
 
 (defcustom babashka-command
   (or (when (featurep 'cider)
@@ -62,6 +58,12 @@
   :group 'babashka
   :type 'string
   :safe #'stringp)
+
+(defcustom babashka-annotation-function nil
+  "Function to annotate completions, can be `babashka--annotation-function' or a similar one."
+  :group 'babashka
+  :type 'function
+  :safe #'functionp)
 
 (defmacro babashka--comment (&rest _)
   "Ignore body eval to nil."
@@ -90,17 +92,26 @@
     babashka--read-edn-file
     (gethash :tasks)))
 
+
 (defun babashka--escape-args (s)
   "Shell quote parts of the string S that require it."
   (mapconcat #'shell-quote-argument (split-string s) " "))
 
-(defun babashka--tasks-to-sorted-names (tasks)
-  "Return sorted TASKS names."
-  (let ((task-names (thread-last tasks
-                      hash-table-keys
-                      (mapcar #'symbol-name)
-                      (seq-remove (apply-partially #'string-prefix-p ":")))))
-    (sort task-names #'string<)))
+(defun babashka--annotation-function (s)
+  "Annotate S using current completiong table."
+  (when-let ((item (assoc s minibuffer-completion-table)))
+    (concat " " (cdr item))))
+
+(defun babashka--tasks-to-annotated-names (tasks)
+  "Convert TASKS to annotated alist."
+  (let (results)
+    (maphash (lambda (key value)
+               (let ((task-name (symbol-name key)))
+                 (unless (string-prefix-p ":" task-name)
+                   (push (cons task-name (gethash :doc value))
+                         results))))
+             tasks)
+    results))
 
 (defun babashka--run-task (dir &optional do-not-recurse)
   "Select a task to run from bb.edn in DIR or its parents.
@@ -113,16 +124,18 @@ DIR's parents."
 		              (babashka--locate-bb-edn dir))))
       (if-let* ((bb-edn-dir (file-name-directory bb-edn))
                 (tasks (babashka--get-tasks-hash-table bb-edn)))
-          (thread-last tasks
-            babashka--tasks-to-sorted-names
-            (completing-read "Run tasks: ")
-            babashka--escape-args
-            (format "%s %s" babashka-command)
-            (babashka--run-shell-command-in-directory bb-edn-dir))
+          (let ((completion-extra-properties (when babashka-annotation-function
+                                               `(:annotation-function ,babashka-annotation-function))))
+            (thread-last tasks
+              babashka--tasks-to-annotated-names
+              (completing-read "Run tasks: ")
+              babashka--escape-args
+              (format "%s %s" babashka-command)
+              (babashka--run-shell-command-in-directory bb-edn-dir)))
         (message "No tasks found in %s" bb-edn))
-    (message (if do-not-recurse
-		         "No bb.edn found in directory."
-		       "No bb.edn found in directory or any of the parents."))))
+    (let ((msg-suffix (if do-not-recurse "" " or any of the parents")))
+      (message (format "No bb.edn found in directory %s%s." dir msg-suffix)))))
+
 
 ;;;###autoload
 (defun babashka-tasks (arg)
