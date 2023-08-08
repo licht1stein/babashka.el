@@ -4,7 +4,7 @@
 ;;
 ;; Author: Mykhaylo Bilyanskyy <mb@m1k.pw>
 ;; Maintainer: Mykhaylo Bilyanskyy <mb@m1k.pw>
-;; Version: 1.0.5
+;; Version: 1.0.6
 ;; Package-Requires: ((emacs "27.1") (parseedn "1.1.0"))
 ;;
 ;; Created: 11 Jun 2023
