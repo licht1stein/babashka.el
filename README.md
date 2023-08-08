@@ -45,6 +45,13 @@ project's root, add `babashka-project-tasks` to your
 
 ![](./videos/4-project.gif)
 
+## Customization
+`babashka-command` - The command used to execute Babashka, if [CIDER](https://cider.mx/) is loaded, gets its default value from `cider-babashka-command`, so you don't need to customize both.
+
+`babashka-async-shell-command` - a single-arity Emacs lisp function to call `babashka-command`. The default value is `async-shell-command`, another possible option is `detached-shell-command` from [detached.el](https://sr.ht/~niklaseklund/detached.el/) package.
+
+`babashka-annotation-function` - a function to convert `tasks` hashtable to  (task . documentation) alist. The only available option now is `babashka--annotation-function`.
+
 ## Installation
 Babashka.el is available on [MELPA](https://melpa.org/#/babashka) and [MELPA Stable](https://stable.melpa.org/#/babashka) and can be installed with:
 
@@ -52,18 +59,22 @@ Babashka.el is available on [MELPA](https://melpa.org/#/babashka) and [MELPA Sta
 M-x package-install RET babashka RET
 ```
 
-or using `use-package`:
+or using `use-package` [ensure feature](https://github.com/jwiegley/use-package#package-installation):
 
 ```elisp
 (use-package babashka)
 ```
+
+Don't forget to explicitly ensure the installation:
+
+```elisp
+(use-package babashka
+  :ensure t)
+```
+if `use-package-always-ensure` is not set.
 
 ## Versioning
 The project uses [break versioning](https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md), meaning that upgrading from 1.0.x to 1.0.y will always be safe, upgrade to 1.y.0 might break something small, and upgrade to y.0.0. will break almost everything. That was a versioning spec in one sentence, by the way.
 
 ## Contributing
 If you have more ideas about using babashka from Emacs — please submit a PR or a feature request.
-
-
-
-
