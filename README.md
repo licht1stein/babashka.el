@@ -65,7 +65,7 @@ or using `use-package` [ensure feature](https://github.com/jwiegley/use-package#
 (use-package babashka)
 ```
 
-Don't forget to explicitly ensure installation:
+Don't forget to explicitly ensure the installation:
 
 ```elisp
 (use-package babashka

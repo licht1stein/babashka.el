@@ -4,7 +4,7 @@
 ;;
 ;; Author: Mykhaylo Bilyanskyy <mb@m1k.pw>
 ;; Maintainer: Mykhaylo Bilyanskyy <mb@m1k.pw>
-;; Version: 1.0.4
+;; Version: 1.0.5
 ;; Package-Requires: ((emacs "27.1") (parseedn "1.1.0"))
 ;;
 ;; Created: 11 Jun 2023
@@ -62,8 +62,8 @@
 (defcustom babashka-annotation-function nil
   "Function to annotate completions, can be `babashka--annotation-function' or a similar one."
   :group 'babashka
-  :type 'function
-  :safe #'functionp)
+  :type '(choice (const :tag "Don't annotate." nil)
+                 function))
 
 (defmacro babashka--comment (&rest _)
   "Ignore body eval to nil."
